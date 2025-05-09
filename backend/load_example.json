@@ -21,8 +21,44 @@
       "diary_source": "string"
     }
   ],
-  "bebra" : 4,
+  "bebra": 4,
   "notes": [
-    {"text":  "expects response 400"}
+    {
+      "author_id": 1,
+      "note_type_id": 1,
+      "temporality_id": 1,
+      "created_at": "2025-05-08",
+      "citation": "string",
+      "source": "string",
+      "tag_ids": [
+        1
+      ],
+      "note_to_points": []
+    }
+  ],
+  "points": [
+    {
+      "rayon_id": 1,
+      "street": "string",
+      "building": "string",
+      "latitude": 0,
+      "longitude": 0,
+      "point_type_id": 0,
+      "point_subtype_id": 0,
+      "point_subsubtype_id": 0,
+      "name": "string",
+      "description": "string"
+    },
+    {
+      "text": "expects response 400"
+    }
+  ],
+  "tags": [
+    {
+      "name": "unique_tag"
+    },
+    {
+      "name": "tag2"
+    }
   ]
 }

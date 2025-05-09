@@ -4,11 +4,12 @@ loads authors, notes, and points from files and ads to database
 import argparse
 import json
 import textwrap
+from json import JSONDecodeError
 
 import requests
 
 DATABASE_API = "http://127.0.0.1:8080/"
-DATA_TYPES = {"authors", "notes", "points", "tags"}
+POST_URLS = {"authors": "authors", "notes":"notes", "points":"points", "tags":"notes/tags"}
 DESCRIPTION = """\
 helps automatically load data from file and add it to database
 currently can add authors, notes, and points
@@ -117,19 +118,24 @@ def load_json(data, logger):
     success = 0
     for k, v in data.items():
         logger(f"processing {k}")
-        if k not in DATA_TYPES:
+        if k not in POST_URLS.keys():
             logger(f"'{k}' is not a valid type of data")
-            logger(f"available data types: {DATA_TYPES}\n")
+            logger(f"available data types: {POST_URLS.keys()}\n")
             continue
         if type(v) is not list:
             logger(f"{k} must be list\n")
             continue
         for data in v:
-            res = requests.post(DATABASE_API + k, json=data)
+            res = requests.post(DATABASE_API + POST_URLS[k], json=data)
             done += 1
             if res.status_code != 200:
                 logger(f"failed to post {k}")
-                logger(json.dumps(json.loads(res.text), sort_keys=True, indent=2, separators=(',', ': ')))
+                try:
+                    logger(res.status_code)
+                    logger(json.dumps(json.loads(res.text), sort_keys=True, indent=2, separators=(',', ': ')))
+                except JSONDecodeError:
+                    logger(res.status_code)
+                    logger(res.text)
             else:
                 success += 1
                 logger(f"post {k} successfully")
@@ -144,7 +150,7 @@ def main():
     parser.description = textwrap.dedent(DESCRIPTION)
     parser.add_argument("input_file", type=str, nargs="?", help="file containing authors, notes, and points")
     parser.add_argument("--examples", action="store_true", help="print examples of storing data")
-    parser.add_argument("-s", "--silent", action="store_false", help="disable verbose output")
+    parser.add_argument("-s", "--silent", action="store_true", help="disable verbose output")
     args = parser.parse_args()
     if args.examples:
         print(EXAMPLES)
