@@ -1,22 +1,29 @@
+import json
+from operator import iadd
+
+import requests
 from flask import Flask, request
-import json_extractor
+
+from backend.loader import load_json
+
 app = Flask(__name__)
 
 @app.route('/')
-def hello_world():
-  return 'Hello, World!'
-
-@app.route('/greet/<name>')
-def greet(name):
-  return f'Hello, {name}!'
+def main_page():
+  return 'nothing here yet'
 
 @app.route('/api/load', methods=['POST'])
 def load():
-  data = request.get_json()
-  print(json_extractor.extract(data))
-  return "ok"
+  """loads given json to database"""
+  data = request.json
+  res = ""
+  def log(msg):
+    nonlocal res
+    res += msg
+  load_json(data, log)
+  print(res)
+  return res
 
 
 if __name__ == '__main__':
-  json_extractor.init()
   app.run(debug=True)

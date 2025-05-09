@@ -1,0 +1,28 @@
+{
+  "authors": [
+    {
+      "last_name": "string",
+      "first_name": "string",
+      "middle_name": "string",
+      "sex": "M",
+      "birth_date": "2025-05-08",
+      "biography": "some unique biography",
+      "has_children": true,
+      "family_status_id": 1,
+      "social_class_ids": [],
+      "nationality_ids": [],
+      "religion_ids": [],
+      "education_ids": [],
+      "occupation_ids": [],
+      "political_party_ids": [],
+      "card_ids": [],
+      "diary_started_at": "2025-05-08",
+      "diary_finished_at": "2025-05-08",
+      "diary_source": "string"
+    }
+  ],
+  "bebra" : 4,
+  "notes": [
+    {"text":  "expects response 400"}
+  ]
+}
