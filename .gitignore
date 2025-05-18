@@ -5,6 +5,3 @@ venv/
 .env
 # IDE
 .idea/
-
-# Cache
-__pycache__
