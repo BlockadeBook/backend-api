@@ -5,10 +5,14 @@ import argparse
 import json
 import textwrap
 from json import JSONDecodeError
-
+import os
+from dotenv import load_dotenv
 import requests
 
-DATABASE_API = "http://127.0.0.1:8080/"
+load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), '..', '.env'))
+
+DATABASE_API = os.getenv("DATABASE_URL")
+
 POST_URLS = {"authors": "authors", "notes": "notes", "points": "points", "tags": "notes/tags"}
 DESCRIPTION = """\
 helps automatically load data from file and add it to database
