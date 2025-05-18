@@ -1,1 +1,10 @@
 *__pycache__*
+venv/
+
+# env
+.env
+# IDE
+.idea/
+
+# Cache
+__pycache__

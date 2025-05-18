@@ -9,7 +9,7 @@ from json import JSONDecodeError
 import requests
 
 DATABASE_API = "http://127.0.0.1:8080/"
-POST_URLS = {"authors": "authors", "notes":"notes", "points":"points", "tags":"notes/tags"}
+POST_URLS = {"authors": "authors", "notes": "notes", "points": "points", "tags": "notes/tags"}
 DESCRIPTION = """\
 helps automatically load data from file and add it to database
 currently can add authors, notes, and points
@@ -102,6 +102,7 @@ example of json describing tag:
 }
 """
 
+
 def load_json(data, logger):
     """
     loads given json into database see structure of json above or via loader.py --help
@@ -142,8 +143,10 @@ def load_json(data, logger):
     logger(f"successful processed {success}\nfailed {done - success}")
     return success
 
+
 def no_log(msg):
     pass
+
 
 def main():
     parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -173,6 +176,7 @@ def main():
     except IOError as e:
         print(f"failed to read {args.input_file}")
         print(e)
+
 
 if __name__ == "__main__":
     main()
