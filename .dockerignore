@@ -1,0 +1,14 @@
+# This file specifies which files and directories should be ignored by Docker when building the image.
+
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+*.log
+load_example.json
+.git
+.gitignore
+.dockerignore
+README.md

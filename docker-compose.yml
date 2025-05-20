@@ -1,0 +1,14 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:5000"
+    volumes:
+      - ./backend:/app/backend
+    environment:
+      - DATABASE_API=127.0.0.1:8080
+
+volumes:
+  database_data:
