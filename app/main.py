@@ -1,15 +1,34 @@
-from flask import Flask
-from app.api.v1 import api_v1
-from dotenv import load_dotenv
-import os
+from contextlib import asynccontextmanager
 
-load_dotenv()
+import httpx
+from fastapi import FastAPI, Request, HTTPException
+from fastapi.exception_handlers import http_exception_handler
 
-def create_app():
-    app = Flask(__name__)
-    app.config["DATABASE_URL"] = os.getenv("DATABASE_URL")
-    app.register_blueprint(api_v1)
-    return app
+from app.api import api_router
+from app.config import config
+from app.db.client import Client
 
-if __name__ == '__main__':
-    create_app().run(debug=True, port=5000)
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    app.state.db_client = Client(config.database_api)
+    yield
+    await app.state.db_client.close()
+
+
+app = FastAPI(title="backend", lifespan=lifespan)
+
+app.include_router(api_router, prefix="/api")
+
+
+# By default, return these responses for such errors.
+# But you can always try&except them if you need different behaviour.
+
+@app.exception_handler(httpx.RequestError)
+async def httpx_request_error_handler(request: Request, e: httpx.RequestError):
+    return await http_exception_handler(request, HTTPException(503))
+
+
+@app.exception_handler(httpx.HTTPStatusError)
+async def httpx_status_error_handler(request: Request, e: httpx.HTTPStatusError):
+    return await http_exception_handler(request, HTTPException(e.response.status_code))
