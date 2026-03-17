@@ -1,4 +1,7 @@
-Flask
+pydantic
+pydantic-settings
+fastapi
+uvicorn
 httpx
 python-dotenv
 requests

@@ -7,8 +7,8 @@ services:
       - "8000:5000"
     volumes:
       - ./app:/backend/app
-    environment:
-      - DATABASE_API=127.0.0.1:8080
+    env_file:
+      - .env
 
 volumes:
   database_data:

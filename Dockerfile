@@ -10,4 +10,4 @@ COPY app/ ./app/
 
 EXPOSE 5000
 
-CMD ["python", "-m", "app.main"]
+CMD ["uvicorn", "app.main:app", "--reload", "--proxy-headers", "--host", "0.0.0.0", "--port", "5000"]
