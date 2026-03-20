@@ -1,4 +1,0 @@
-Flask
-httpx
-python-dotenv
-requests
