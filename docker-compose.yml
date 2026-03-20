@@ -4,11 +4,11 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "8000:5000"
+      - "8000:8000"
     volumes:
       - ./app:/backend/app
     environment:
-      - DATABASE_API=127.0.0.1:8080
+      - DATABASE_URL=http://database-core:8080
 
 volumes:
   database_data:

@@ -1,5 +1,3 @@
-# This file specifies which files and directories should be ignored by Docker when building the image.
-
 __pycache__
 *.pyc
 *.pyo
@@ -12,3 +10,6 @@ load_example.json
 .gitignore
 .dockerignore
 README.md
+.env
+.env.example
+.venv
