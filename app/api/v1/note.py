@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Request
 
+from app.api.cache import cached_proxy_get
 from app.api.proxy import proxy_get, proxy_post
 from app.schemas import NoteCreate, NoteDetailed, NoteFilters, NoteResponse, NoteShort, TagCreate
 
@@ -9,7 +10,7 @@ router = APIRouter(prefix="/notes", tags=["notes"])
 @router.get("/filters", response_model=NoteFilters)
 async def note_filters(request: Request):
     """Get all filter options for notes."""
-    return await proxy_get(request.app.state.db_client, "notes/filters")
+    return await cached_proxy_get(request.app.state.db_client, request.app.state.filter_cache, "notes/filters")
 
 
 @router.post("/tags", status_code=201)

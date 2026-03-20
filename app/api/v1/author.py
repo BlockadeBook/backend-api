@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Request
 
+from app.api.cache import cached_proxy_get
 from app.api.proxy import proxy_get, proxy_post
 from app.schemas import AuthorCreate, AuthorFilters, AuthorResponse, AuthorShort
 
@@ -19,7 +20,7 @@ async def list_authors(request: Request):
 @router.get("/filters", response_model=AuthorFilters)
 async def author_filters(request: Request):
     """Get all filter options for authors."""
-    return await proxy_get(request.app.state.db_client, "authors/filters")
+    return await cached_proxy_get(request.app.state.db_client, request.app.state.filter_cache, "authors/filters")
 
 
 @router.get("/{author_id}", response_model=AuthorResponse)
