@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Request
 
+from app.api.cache import cached_proxy_get
 from app.api.proxy import proxy_get, proxy_post
 from app.schemas import (
     CoordinatesCreate,
@@ -15,7 +16,7 @@ router = APIRouter(prefix="/points", tags=["points"])
 @router.get("/filters", response_model=PointFilters)
 async def point_filters(request: Request):
     """Get type hierarchy filter options for points."""
-    return await proxy_get(request.app.state.db_client, "points/filters")
+    return await cached_proxy_get(request.app.state.db_client, request.app.state.filter_cache, "points/filters")
 
 
 @router.get("/{point_id}", response_model=PointResponse)

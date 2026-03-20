@@ -19,6 +19,7 @@ DATABASE_URL = os.getenv("DATABASE_URL", "http://127.0.0.1:8080")
 async def lifespan(app: FastAPI):
     """Create async httpx client on startup, close on shutdown."""
     app.state.db_client = httpx.AsyncClient(base_url=DATABASE_URL)
+    app.state.filter_cache: dict[str, dict] = {}
     yield
     await app.state.db_client.aclose()
 
