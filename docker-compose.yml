@@ -9,6 +9,32 @@ services:
       - ./app:/backend/app
     environment:
       - DATABASE_URL=http://database-core:8080
+      - ADMIN_DB_HOST=admin_db
+      - ADMIN_DB_PORT=5432
+      - ADMIN_DB_NAME=admin
+      - ADMIN_DB_USER=admin
+      - ADMIN_DB_PASSWORD=admin
+      - JWT_SECRET=change-me-in-production
+    depends_on:
+      admin_db:
+        condition: service_healthy
+
+  admin_db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: admin
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+    ports:
+      - "5433:5432"
+    volumes:
+      - admin_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d admin"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
 
 volumes:
   database_data:
+  admin_db_data:
