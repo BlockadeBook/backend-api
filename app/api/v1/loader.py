@@ -2,15 +2,17 @@ from __future__ import annotations
 
 from typing import Any
 
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Depends, Request
 from fastapi.responses import JSONResponse
+
+from app.auth import admin_required
 
 router = APIRouter(prefix="/loader", tags=["loader"])
 
 POST_URLS = {"authors": "authors", "notes": "notes", "points": "points", "tags": "notes/tags"}
 
 
-@router.post("/load")
+@router.post("/load", dependencies=[Depends(admin_required)])
 async def load_data(request: Request):
     """Load JSON data (authors, notes, points, tags) into database-core.
 
