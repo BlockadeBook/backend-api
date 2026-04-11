@@ -1,7 +1,8 @@
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Depends, Request
 
 from app.api.cache import cached_proxy_get
 from app.api.proxy import proxy_get, proxy_post
+from app.auth.decorators import admin_required
 from app.schemas import NoteCreate, NoteDetailed, NoteFilters, NoteResponse, NoteShort, TagCreate
 
 router = APIRouter(prefix="/notes", tags=["notes"])
@@ -13,7 +14,7 @@ async def note_filters(request: Request):
     return await cached_proxy_get(request.app.state.db_client, request.app.state.filter_cache, "notes/filters")
 
 
-@router.post("/tags", status_code=201)
+@router.post("/tags", status_code=201, dependencies=[Depends(admin_required)])
 async def create_tag(body: TagCreate, request: Request):
     """Create a new tag."""
     return await proxy_post(
@@ -48,7 +49,7 @@ async def get_note(note_id: int, request: Request):
     )
 
 
-@router.post("/", response_model=NoteResponse, status_code=201)
+@router.post("/", response_model=NoteResponse, status_code=201, dependencies=[Depends(admin_required)])
 async def create_note(body: NoteCreate, request: Request):
     """Create a new note."""
     return await proxy_post(
