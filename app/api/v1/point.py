@@ -1,7 +1,8 @@
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Depends, Request
 
 from app.api.cache import cached_proxy_get
 from app.api.proxy import proxy_get, proxy_post
+from app.auth.decorators import admin_required
 from app.schemas import (
     CoordinatesCreate,
     PointCoordinatesResponse,
@@ -47,7 +48,7 @@ async def get_point_notes(point_id: int, request: Request):
     )
 
 
-@router.post("/", response_model=PointResponse, status_code=201)
+@router.post("/", response_model=PointResponse, status_code=201, dependencies=[Depends(admin_required)])
 async def create_point(body: PointCreate, request: Request):
     """Create a new point."""
     return await proxy_post(
@@ -57,7 +58,7 @@ async def create_point(body: PointCreate, request: Request):
     )
 
 
-@router.post("/{point_id}/coordinates", status_code=201)
+@router.post("/{point_id}/coordinates", status_code=201, dependencies=[Depends(admin_required)])
 async def add_point_coordinates(
     point_id: int, body: CoordinatesCreate, request: Request
 ):
