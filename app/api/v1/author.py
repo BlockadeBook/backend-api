@@ -9,11 +9,11 @@ router = APIRouter(prefix="/authors", tags=["authors"])
 
 @router.get("/", response_model=list[AuthorShort])
 async def list_authors(request: Request):
-    """List all authors (short read, no relations)."""
+    """List all authors (full read with relations)."""
     return await proxy_get(
         request.app.state.db_client,
         "authors/",
-        params={"extended": "false"},
+        params={"extended": "true"},
     )
 
 

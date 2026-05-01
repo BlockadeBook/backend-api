@@ -67,3 +67,13 @@ async def add_point_coordinates(
         f"points/{point_id}/coordinates",
         body.model_dump(),
     )
+
+
+@router.get("/")
+async def list_points(request: Request):
+    """List all points (full read with all relations)."""
+    return await proxy_get(
+        request.app.state.db_client,
+        "points/",
+        params={"extended": "true"},
+    )

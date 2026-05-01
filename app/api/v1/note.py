@@ -29,12 +29,13 @@ async def detailed_note(note_id: int, request: Request):
     return await proxy_get(request.app.state.db_client, f"notes/detailed/{note_id}")
 
 
-@router.get("/by-point/{point_id}", response_model=list[NoteShort])
+@router.get("/by-point/{point_id}")
 async def notes_by_point(point_id: int, request: Request):
-    """List short notes for a specific point."""
+    """List full notes for a specific point."""
     return await proxy_get(
         request.app.state.db_client,
         f"points/{point_id}/notes",
+        params={"extended": "true"},
     )
 
 
