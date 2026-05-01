@@ -106,6 +106,9 @@ class AuthorResponse(BaseModel):
     occupation: List[FilterItem] = []
     political_parties: List[FilterItem] = []
     cards: List[FilterItem] = []
+    diary_started_at: Optional[date] = None
+    diary_finished_at: Optional[date] = None
+    diary_source: Optional[str] = None
 
 
 # ---------------------------------------------------------------------------
@@ -176,6 +179,7 @@ class NoteResponse(BaseModel):
     first_name: str = ""
     middle_name: Optional[str] = None
     last_name: str = ""
+    note_to_points: List[dict[str, Any]] = []
 
 
 class NoteDetailed(BaseModel):
@@ -292,3 +296,21 @@ class PointResponse(BaseModel):
     point_subtype: Optional[FilterItem] = None
     point_subsubtype: Optional[FilterItem] = None
     point_coordinates: List[CoordinateItem] = []
+
+
+# ---------------------------------------------------------------------------
+# Diary — Response schemas
+# ---------------------------------------------------------------------------
+
+class DiaryShort(BaseModel):
+    """Short diary info."""
+    diary_id: int
+    author_id: int
+    diary_started_at: Optional[date] = None
+    diary_finished_at: Optional[date] = None
+    diary_source: Optional[str] = None
+
+
+class DiaryResponse(DiaryShort):
+    """Full diary with author details."""
+    author: Optional[AuthorShort] = None
