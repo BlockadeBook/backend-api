@@ -7,7 +7,7 @@ from app.schemas import AuthorCreate, AuthorFilters, AuthorResponse, AuthorShort
 router = APIRouter(prefix="/authors", tags=["authors"])
 
 
-@router.get("/", response_model=list[AuthorShort])
+@router.get("/", response_model=list[AuthorResponse])
 async def list_authors(request: Request):
     """List all authors (full read with relations)."""
     return await proxy_get(

@@ -69,7 +69,7 @@ async def add_point_coordinates(
     )
 
 
-@router.get("/")
+@router.get("/", response_model=list[PointResponse])
 async def list_points(request: Request):
     """List all points (full read with all relations)."""
     return await proxy_get(
