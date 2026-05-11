@@ -35,6 +35,11 @@ async def register(body: AuthRequest, _admin=Depends(admin_required)):
     return {"id": user["id"], "username": user["username"]}
 
 
+@auth_router.get("/me")
+async def me(user=Depends(admin_required)):
+    return {"id": user["id"], "username": user["username"]}
+
+
 @auth_router.post("/login")
 async def login(body: AuthRequest):
     with get_cursor() as cur:
