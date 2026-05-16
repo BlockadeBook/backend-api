@@ -1,6 +1,9 @@
-from fastapi import APIRouter, Request
+from typing import Optional
+
+from fastapi import APIRouter, Query, Request
 
 from app.api.cache import cached_proxy_get
+from app.api.filter import filter_response
 from app.api.proxy import proxy_get, proxy_post
 from app.schemas import (
     CoordinatesCreate,
@@ -70,10 +73,21 @@ async def add_point_coordinates(
 
 
 @router.get("/", response_model=list[PointResponse])
-async def list_points(request: Request):
-    """List all points (full read with all relations)."""
-    return await proxy_get(
+async def list_points(
+    request: Request,
+    point_type_id: Optional[list[int]] = Query(default=None),
+    point_subtype_id: Optional[list[int]] = Query(default=None),
+    point_subsubtype_id: Optional[list[int]] = Query(default=None),
+):
+    """List points with optional filtering."""
+    data = await proxy_get(
         request.app.state.db_client,
         "points/",
         params={"extended": "true"},
     )
+    filters = {
+        "point_type_id": point_type_id or [],
+        "point_subtype_id": point_subtype_id or [],
+        "point_subsubtype_id": point_subsubtype_id or [],
+    }
+    return filter_response(data, filters, list_fields=set())

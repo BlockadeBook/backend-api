@@ -1,6 +1,9 @@
-from fastapi import APIRouter, Request
+from typing import Optional
+
+from fastapi import APIRouter, Query, Request
 
 from app.api.cache import cached_proxy_get
+from app.api.filter import filter_response
 from app.api.proxy import proxy_get, proxy_post
 from app.schemas import NoteCreate, NoteDetailed, NoteFilters, NoteResponse, NoteShort, TagCreate
 
@@ -57,3 +60,24 @@ async def create_note(body: NoteCreate, request: Request):
         "notes/",
         body.model_dump(),
     )
+
+
+@router.get("/", response_model=list[NoteResponse])
+async def list_notes(
+    request: Request,
+    tag_id: Optional[list[int]] = Query(default=None),
+    note_type_id: Optional[list[int]] = Query(default=None),
+    temporality_id: Optional[list[int]] = Query(default=None),
+):
+    """List notes with optional filtering."""
+    data = await proxy_get(
+        request.app.state.db_client,
+        "notes/",
+        params={"extended": "true"},
+    )
+    filters = {
+        "tags": tag_id or [],
+        "note_type_id": note_type_id or [],
+        "temporality_id": temporality_id or [],
+    }
+    return filter_response(data, filters, list_fields={"tags"})
